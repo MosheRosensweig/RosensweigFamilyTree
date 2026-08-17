@@ -12,6 +12,8 @@ const CORS_PROXIES = [
     (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
 ];
 
+const APPS_SCRIPT_URL = ''; // Deploy the Apps Script (see google_apps_script.js) and paste the URL here
+
 // ============================================
 // DATA STATE
 // ============================================
@@ -1734,6 +1736,34 @@ function setupAddMemberModal() {
         document.getElementById('result-csv-text').value = csvRow;
         form.style.display = 'none';
         resultBox.style.display = 'flex';
+
+        if (APPS_SCRIPT_URL) {
+            const payload = {
+                placement: addType === 'spouse' ? targetNode.placement + '+' : targetNode.placement + '.' + ((targetNode.children ? targetNode.children.length : 0)),
+                lastName: addType === 'spouse' ? finalLastName : finalLastName,
+                maidenName: addType === 'spouse' ? lastName : '',
+                firstName: firstName,
+                middleName: middleName,
+                hebrewName: hebrewName,
+                nickname: nickname,
+                hebrewBirthDate: hebrewBirthday,
+                englishBirthDate: birthday,
+                hebrewYartzeit: '',
+                englishYartzeit: '',
+                address: address,
+                email: email
+            };
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                console.log('Saved to Google Spreadsheet via Apps Script.');
+            }).catch(err => {
+                console.error('Apps Script POST error:', err);
+            });
+        }
     });
 
     const copyCsvBtn = document.getElementById('copy-csv-btn');

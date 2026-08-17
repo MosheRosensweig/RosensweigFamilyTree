@@ -229,7 +229,7 @@ function renderRootNode(node) {
     const el = document.createElement('div');
     el.className = 'tree-root-node';
     const coupleHtml = buildCoupleDisplayName(node.person, node.spouse);
-    el.innerHTML = '<div>' + coupleHtml + '</div><div class="person-detail">Patriarch &amp; Matriarch</div>';
+    el.innerHTML = '<div>' + coupleHtml + '</div><div class="person-detail">Saba &amp; Mimi</div>';
     return el;
 }
 

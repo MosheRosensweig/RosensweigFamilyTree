@@ -126,15 +126,15 @@
         </div>
     </div>
 
-    <!-- Person Info Modal (replaces contact modal) -->
+    <!-- Contact Modal (address + email only) -->
     <div id="person-info-modal" class="contact-modal" style="display:none;" role="dialog" aria-labelledby="person-info-title">
         <div class="contact-modal-overlay" id="person-info-overlay"></div>
         <div class="contact-modal-card">
             <button class="contact-modal-close" id="person-info-close" title="Dismiss">✕</button>
             <div class="contact-modal-header">
-                <div class="contact-avatar">👤</div>
+                <div class="contact-avatar">📇</div>
                 <div>
-                    <h3 id="person-info-title">Person Details</h3>
+                    <h3 id="person-info-title">Contact Details</h3>
                     <p id="person-info-subtitle" class="contact-subtitle"></p>
                 </div>
             </div>
@@ -275,15 +275,15 @@
         </div>
     </div>
 
-    <!-- Single Person Birthday/Yahrzeit Modal -->
+    <!-- Single Person Birthday Modal -->
     <div id="person-birthday-modal" class="contact-modal" style="display:none;" role="dialog" aria-labelledby="person-bday-title">
         <div class="contact-modal-overlay" id="person-bday-overlay"></div>
         <div class="contact-modal-card">
             <button class="contact-modal-close" id="person-bday-close" title="Dismiss">✕</button>
             <div class="contact-modal-header">
-                <div class="contact-avatar">👤</div>
+                <div class="contact-avatar">🎂</div>
                 <div>
-                    <h3 id="person-bday-title">Birthday & Yahrzeit Information</h3>
+                    <h3 id="person-bday-title">Birthday Information</h3>
                     <p id="person-bday-subtitle" class="contact-subtitle"></p>
                 </div>
             </div>
@@ -463,6 +463,10 @@
                     <button type="submit" class="btn btn-gold" id="add-submit-btn">Add to Tree</button>
                 </div>
                 <div id="submit-status" class="submit-status" style="display:none;"></div>
+
+                <div class="modal-edit-notice">
+                    <span>💡 <strong>Made a mistake or need to make changes?</strong> You can edit member details directly in the <a href="https://docs.google.com/spreadsheets/d/1ACLX4txK8fj_KTWEkWI1OyzqtRUAdds1E-NPljAVRUo/edit" target="_blank" rel="noopener">Google Spreadsheet</a> and refresh the page.</span>
+                </div>
             </form>
 
             <div id="add-result-box" class="add-result-box" style="display:none;">

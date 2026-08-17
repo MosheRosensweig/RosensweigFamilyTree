@@ -278,7 +278,7 @@ function renderBranch(node, generation, siblingIndex) {
     if (bdayBtn) {
         bdayBtn.addEventListener('click', e => {
             e.stopPropagation();
-            showPersonInfoModal(node);
+            showPersonBirthdayModal(node);
         });
     }
 
@@ -288,7 +288,7 @@ function renderBranch(node, generation, siblingIndex) {
         if (badgeBtn) {
             badgeBtn.addEventListener('click', e => {
                 e.stopPropagation();
-                showPersonInfoModal(node);
+                showContactModal(node);
             });
         }
     }
@@ -333,7 +333,7 @@ function renderLeafNode(node, generation) {
     if (bdayBtn) {
         bdayBtn.addEventListener('click', e => {
             e.stopPropagation();
-            showPersonInfoModal(node);
+            showPersonBirthdayModal(node);
         });
     }
 
@@ -343,12 +343,12 @@ function renderLeafNode(node, generation) {
         if (badgeBtn) {
             badgeBtn.addEventListener('click', e => {
                 e.stopPropagation();
-                showPersonInfoModal(node);
+                showContactModal(node);
             });
         }
         el.addEventListener('click', e => {
             if (!e.target.closest('.contact-badge') && !e.target.closest('.node-birthday-badge')) {
-                showPersonInfoModal(node);
+                showContactModal(node);
             }
         });
     }
@@ -902,7 +902,7 @@ function getBirthdayEventsForNode(node) {
         const englishYartParsed = parseEnglishBirthdayString(person.englishYartzeit);
         if (hebrewParsed || englishParsed || hebrewYartParsed || englishYartParsed) {
             results.push({
-                name: person.displayName || person.firstName || '?',
+                name: [person.displayName || person.firstName, person.lastName].filter(Boolean).join(' '),
                 role,
                 hebrewParsed, englishParsed,
                 hebrewYartParsed, englishYartParsed,
@@ -919,10 +919,10 @@ function getBirthdayEventsForNode(node) {
 }
 
 // ============================================
-// PERSON DETAIL MODAL (replaces contact modal)
+// CONTACT MODAL SETUP (address + email only)
 // ============================================
 
-function setupPersonInfoModal() {
+function setupContactModal() {
     const overlay = document.getElementById('person-info-overlay');
     const closeBtn = document.getElementById('person-info-close');
     const dismissBtn = document.getElementById('person-info-dismiss');
@@ -933,64 +933,8 @@ function setupPersonInfoModal() {
     document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
 }
 
-function showPersonInfoModal(node) {
-    const modal = document.getElementById('person-info-modal');
-    const titleEl = document.getElementById('person-info-title');
-    const subtitleEl = document.getElementById('person-info-subtitle');
-    const bodyEl = document.getElementById('person-info-body');
-    if (!modal || !bodyEl) return;
-
-    function buildPersonSection(person, role) {
-        const displayName = buildDisplayName(person);
-        const roleLabel = role === 'spouse' ? '<span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(Spouse)</span>' : '';
-        const fullName = [person.firstName, person.middleName, person.lastName].filter(Boolean).join(' ');
-        let html = '<div style="margin-bottom:0.75rem;">';
-        html += '<h4 style="color:var(--gold-200);font-size:1rem;">👤 ' + escapeHtml(displayName) + ' ' + roleLabel + '</h4>';
-        html += '<div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;">';
-        if (fullName && fullName !== displayName) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>📋 <strong>Full Name:</strong></span><span>' + escapeHtml(fullName) + '</span></div>';
-        }
-        if (person.maidenName) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>👰 <strong>Maiden Name:</strong></span><span>' + escapeHtml(person.maidenName) + '</span></div>';
-        }
-        html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>📍 <strong>Placement:</strong></span><span>' + escapeHtml(person.placement) + '</span></div>';
-        if (person.hebrewBirthDate) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🎈 <strong>Hebrew Birthday:</strong></span><span style="color:var(--gold-200);font-weight:500;">' + escapeHtml(person.hebrewBirthDate) + '</span></div>';
-        }
-        if (person.englishBirthDate) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🎂 <strong>English Birthday:</strong></span><span>' + escapeHtml(person.englishBirthDate) + '</span></div>';
-        }
-        if (person.hebrewYartzeit) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🕯️ <strong>Hebrew Yahrzeit:</strong></span><span style="color:#a855f7;font-weight:500;">' + escapeHtml(person.hebrewYartzeit) + '</span></div>';
-        }
-        if (person.englishYartzeit) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🕯️ <strong>English Yahrzeit:</strong></span><span style="color:var(--text-secondary);font-weight:500;">' + escapeHtml(person.englishYartzeit) + '</span></div>';
-        }
-        if (person.address) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🏠 <strong>Address:</strong></span><span>' + escapeHtml(person.address) + '</span></div>';
-        }
-        if (person.email) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>📧 <strong>Email:</strong></span><a href="mailto:' + escapeHtml(person.email) + '" style="color:var(--gold-400);text-decoration:none;">' + escapeHtml(person.email) + '</a></div>';
-        }
-        if (person.hebrewName && person.hebrewName !== person.firstName) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🇮🇱 <strong>Hebrew Name:</strong></span><span>' + escapeHtml(person.hebrewName) + '</span></div>';
-        }
-        if (person.nickname) {
-            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>💛 <strong>Nickname:</strong></span><span>' + escapeHtml(person.nickname) + '</span></div>';
-        }
-        html += '</div></div>';
-        return html;
-    }
-
-    titleEl.textContent = '👤 Person Details';
-    let body = buildPersonSection(node.person, 'primary');
-    if (node.spouse) body += buildPersonSection(node.spouse, 'spouse');
-    bodyEl.innerHTML = body;
-    modal.style.display = 'flex';
-}
-
 // ============================================
-// PERSON BIRTHDAY/YAHRZEIT MODAL
+// PERSON BIRTHDAY MODAL
 // ============================================
 
 function setupPersonBirthdayModal() {
@@ -1015,38 +959,68 @@ function showPersonBirthdayModal(node) {
     let displayName = node.person.displayName;
     if (node.spouse) displayName += ' & ' + node.spouse.displayName;
 
-    titleEl.textContent = '🎂 Birthday & Yahrzeit Information';
-    subtitleEl.textContent = 'Dates for ' + displayName;
+    titleEl.textContent = '🎂 Birthday Information';
+    subtitleEl.textContent = 'Birthdays for ' + displayName;
 
     if (events.length === 0) {
-        bodyEl.innerHTML = '<div style="text-align:center;padding:1.5rem 0.5rem;"><div style="font-size:2.2rem;margin-bottom:0.5rem;">📅</div><p style="color:var(--text-primary);font-weight:500;">No dates on record yet for ' + escapeHtml(displayName) + '.</p></div>';
+        bodyEl.innerHTML = '<div style="text-align:center;padding:1.5rem 0.5rem;"><div style="font-size:2.2rem;margin-bottom:0.5rem;">📅</div><p style="color:var(--text-primary);font-weight:500;">No birthday on record yet for ' + escapeHtml(displayName) + '.</p><p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.25rem;">You can add their birthday using the <strong>Add Member</strong> button above.</p></div>';
     } else {
         bodyEl.innerHTML = events.map(item => {
             let html = '<div style="margin-bottom:0.75rem;">';
             html += '<h4 style="color:var(--gold-200);font-size:1rem;">👤 ' + escapeHtml(item.name) + (item.role === 'spouse' ? ' <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(Spouse)</span>' : '') + '</h4>';
             html += '<div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;">';
-            if (item.hebrewParsed || item.englishParsed) {
-                html += '<div style="padding:0.3rem 0;border-bottom:1px solid var(--border-subtle);font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Birthday</div>';
-            }
-            if (item.hebrewParsed) {
-                html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🎈 <strong>Hebrew:</strong></span><span style="color:var(--gold-200);font-weight:500;">' + escapeHtml(item.hebrewRaw) + '</span></div>';
-            }
-            if (item.englishParsed) {
-                html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🎂 <strong>English:</strong></span><span>' + escapeHtml(item.englishRaw) + '</span></div>';
-            }
-            if (item.hebrewYartParsed || item.englishYartParsed) {
-                html += '<div style="padding:0.3rem 0;border-bottom:1px solid var(--border-subtle);font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Yahrzeit</div>';
-            }
-            if (item.hebrewYartParsed) {
-                html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🕯️ <strong>Hebrew:</strong></span><span style="color:#a855f7;font-weight:500;">' + escapeHtml(item.hebrewYartRaw) + '</span></div>';
-            }
-            if (item.englishYartParsed) {
-                html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🕯️ <strong>English:</strong></span><span style="color:var(--text-secondary);">' + escapeHtml(item.englishYartRaw) + '</span></div>';
-            }
+            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🎂 <strong>English:</strong></span><span>' + (item.englishRaw ? escapeHtml(item.englishRaw) : '<span style="color:var(--text-muted);font-style:italic;">Not listed</span>') + '</span></div>';
+            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>📜 <strong>Hebrew:</strong></span><span style="color:var(--gold-200);font-weight:500;">' + (item.hebrewRaw ? escapeHtml(item.hebrewRaw) : '<span style="color:var(--text-muted);font-style:italic;">Not listed</span>') + '</span></div>';
             html += '</div></div>';
             return html;
         }).join('');
     }
+    modal.style.display = 'flex';
+}
+
+// ============================================
+// CONTACT MODAL (address + email only)
+// ============================================
+
+function showContactModal(node) {
+    const modal = document.getElementById('person-info-modal');
+    const titleEl = document.getElementById('person-info-title');
+    const subtitleEl = document.getElementById('person-info-subtitle');
+    const bodyEl = document.getElementById('person-info-body');
+    if (!modal || !bodyEl) return;
+
+    let displayName = node.person.displayName;
+    if (node.spouse) displayName += ' & ' + node.spouse.displayName;
+
+    titleEl.textContent = '📇 Contact Details';
+    subtitleEl.textContent = 'Contact info for ' + displayName;
+
+    let html = '';
+    function addPersonSection(person, role) {
+        if (!person) return;
+        const name = buildDisplayName(person);
+        const roleLabel = role === 'spouse' ? ' <span style="font-size:0.8rem;opacity:0.7;font-weight:normal;">(Spouse)</span>' : '';
+        const hasContact = person.address || person.email;
+        if (!hasContact) return;
+        html += '<div style="margin-bottom:0.75rem;">';
+        html += '<h4 style="color:var(--gold-200);font-size:1rem;">👤 ' + escapeHtml(name) + roleLabel + '</h4>';
+        html += '<div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;">';
+        if (person.address) {
+            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>🏠 <strong>Address:</strong></span><span>' + escapeHtml(person.address) + '</span></div>';
+        }
+        if (person.email) {
+            html += '<div style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"><span>📧 <strong>Email:</strong></span><a href="mailto:' + escapeHtml(person.email) + '" style="color:var(--gold-400);text-decoration:none;">' + escapeHtml(person.email) + '</a></div>';
+        }
+        html += '</div></div>';
+    }
+    addPersonSection(node.person, 'primary');
+    if (node.spouse) addPersonSection(node.spouse, 'spouse');
+
+    if (!html) {
+        html = '<div style="text-align:center;padding:1.5rem 0.5rem;"><p style="color:var(--text-muted);">No contact information on record for ' + escapeHtml(displayName) + '.</p></div>';
+    }
+
+    bodyEl.innerHTML = html;
     modal.style.display = 'flex';
 }
 
@@ -1815,10 +1789,16 @@ async function loadFamilyTree() {
         }
     }
 
+    if (!csvText && typeof EMBEDDED_CSV !== 'undefined') {
+        console.warn('Could not fetch live data, using embedded copy.');
+        csvText = EMBEDDED_CSV;
+    }
+
+    loading.style.display = 'none';
+
     if (!csvText) {
-        loading.style.display = 'none';
         errorEl.style.display = 'block';
-        document.getElementById('error-text').textContent = 'Unable to load the family tree data from Google Sheets. Please check your internet connection and try again.';
+        document.getElementById('error-text').textContent = 'Unable to load the family tree data. Please check your internet connection and try again.';
         console.error('Could not fetch live data. Last error:', lastError);
         return;
     }
@@ -1859,7 +1839,7 @@ async function loadFamilyTree() {
 document.addEventListener('DOMContentLoaded', () => {
     setupControls();
     setupSearch();
-    setupPersonInfoModal();
+    setupContactModal();
     setupPersonBirthdayModal();
     setupBHPrompt();
     setupBirthdayPopup();

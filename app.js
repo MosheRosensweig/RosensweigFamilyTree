@@ -118,7 +118,7 @@ function buildCoupleDisplayName(personData, spouseData) {
     const spouseName = buildDisplayName(spouseData);
     const maidenPart = spouseData.maidenName ? ' (' + escapeHtml(spouseData.maidenName) + ')' : '';
     const lastName = personData.lastName || spouseData.lastName || '';
-    return '<span class="person-name">' + escapeHtml(personName) + ' <span class="amp">&amp;</span> <span class="spouse-name">' + escapeHtml(spouseName) + maidenPart + '</span></span> <span class="spouse-name">' + escapeHtml(lastName) + '</span>';
+    return '<span class="person-name">' + escapeHtml(personName) + ' <span class="amp">&amp;</span> ' + escapeHtml(spouseName) + maidenPart + ' ' + escapeHtml(lastName) + '</span>';
 }
 
 // ============================================

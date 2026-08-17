@@ -1804,13 +1804,6 @@ async function loadFamilyTree() {
     let csvText = null;
     let lastError = null;
 
-    if (window.location.protocol === 'file:') {
-        loading.style.display = 'none';
-        errorEl.style.display = 'block';
-        document.getElementById('error-text').innerHTML = 'Cannot load data from a local file. Please serve this page via HTTP:<br><br><code>npx http-server</code><br>or<br><code>python3 -m http.server 8080</code><br><br>Then open <a href="http://localhost:8080" style="color:var(--gold-400)">http://localhost:8080</a>';
-        return;
-    }
-
     for (const proxyFn of CORS_PROXIES) {
         try {
             csvText = await fetchWithProxy(SPREADSHEET_CSV_URL, proxyFn);
@@ -1822,14 +1815,15 @@ async function loadFamilyTree() {
         }
     }
 
-    loading.style.display = 'none';
-
     if (!csvText) {
+        loading.style.display = 'none';
         errorEl.style.display = 'block';
         document.getElementById('error-text').textContent = 'Unable to load the family tree data from Google Sheets. Please check your internet connection and try again.';
         console.error('Could not fetch live data. Last error:', lastError);
         return;
     }
+
+    loading.style.display = 'none';
 
     try {
         parsedRows = processFamilyCSV(csvText);
@@ -1857,6 +1851,7 @@ async function loadFamilyTree() {
     }
 }
 
+// ============================================
 // ============================================
 // INITIALIZATION
 // ============================================

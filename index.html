@@ -53,17 +53,23 @@
             <span class="search-results" id="search-results"></span>
         </div>
         <div class="button-group">
-            <button class="btn btn-gold" id="calendar-btn" title="View Full Year & Monthly Printable Calendar">
-                📅 Calendar
-            </button>
-            <button class="btn btn-gold" id="birthdays-btn" title="View Upcoming & Recent Birthdays & Yahrzeits">
-                🎂 Birthdays & Yahrzeits
-            </button>
             <button class="btn btn-gold" id="add-member-btn" title="Add a new family member">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                     <path d="M12 5v14M5 12h14"/>
                 </svg>
                 Add Member
+            </button>
+            <button class="btn btn-gold" id="birthdays-btn" title="View Upcoming & Recent Birthdays & Yahrzeits">
+                🎂 Birthdays & Yahrzeits
+            </button>
+            <button class="btn btn-gold" id="calendar-btn" title="View Full Year & Monthly Printable Calendar">
+                📅 Calendar
+            </button>
+            <button class="btn btn-gold" id="kever-btn" title="View Kever Info & Directions">
+                🪦 Kever Info
+            </button>
+            <button class="btn btn-gold" id="weppa-btn" title="Weppa!">
+                🎉 Weppa
             </button>
             <button class="btn" id="expand-all" title="Expand All">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -82,6 +88,9 @@
                     <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/>
                 </svg>
                 Refresh
+            </button>
+            <button class="btn" id="weppa-btn" title="Weppa!">
+                🎉 Weppa
             </button>
         </div>
     </div>
@@ -124,6 +133,37 @@
                 <span>Great-Great-Grandchildren</span>
             </div>
         </div>
+    </div>
+
+    <!-- Kever Info Modal -->
+    <div id="kever-modal" class="contact-modal" style="display:none;" role="dialog">
+        <div class="contact-modal-overlay" id="kever-overlay"></div>
+        <div class="contact-modal-card" style="max-width:520px;max-height:90vh;overflow-y:auto;">
+            <button class="contact-modal-close" id="kever-close" title="Dismiss">✕</button>
+            <div class="contact-modal-header">
+                <div class="contact-avatar">🪦</div>
+                <div>
+                    <h3>Kever Info</h3>
+                    <p class="contact-subtitle">Mimi &amp; Saba's Kever</p>
+                </div>
+            </div>
+            <div class="contact-modal-body" style="text-align:center;">
+                <img src="kever%20picture.jpg" alt="Mimi and Saba's Kever" style="width:100%;max-width:350px;height:auto;border-radius:0.75rem;margin-bottom:1rem;border:2px solid var(--border-subtle);object-fit:contain;">
+                <p style="margin-bottom:0.75rem;"><a href="https://maps.app.goo.gl/BqYbXr8wnmtfE8Gk9?g_st=aw" target="_blank" rel="noopener" style="color:var(--gold-400);text-decoration:none;font-weight:500;">📍 Open in Google Maps</a></p>
+                <div style="text-align:left;font-size:0.9rem;line-height:1.6;color:var(--text-primary);background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:0.5rem;padding:1rem;">
+                    <p style="font-weight:600;margin-bottom:0.5rem;">Directions:</p>
+                    <p>X marks the main <strong>הספדים</strong> building. When you reach it, on your left, turn right and park. You'll have stairs on your left going up to an area of graves. Go straight and they'll be waiting for you on the right.</p>
+                </div>
+            </div>
+            <div class="contact-modal-footer">
+                <button class="btn btn-accent" id="kever-dismiss">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weppa Overlay -->
+    <div id="weppa-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+        <div id="weppa-text" style="font-size:3rem;font-weight:900;color:var(--gold-200);font-family:var(--font-display);opacity:0;transition:font-size 0.4s ease, opacity 0.5s ease;">Weppa</div>
     </div>
 
     <!-- Contact Modal (address + email only) -->

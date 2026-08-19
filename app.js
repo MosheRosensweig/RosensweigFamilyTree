@@ -1871,6 +1871,69 @@ async function loadFamilyTree() {
 }
 
 // ============================================
+// KEVER INFO MODAL
+// ============================================
+
+function setupKeverModal() {
+    const btn = document.getElementById('kever-btn');
+    const modal = document.getElementById('kever-modal');
+    const overlay = document.getElementById('kever-overlay');
+    const closeBtn = document.getElementById('kever-close');
+    const dismissBtn = document.getElementById('kever-dismiss');
+    const hide = () => { if (modal) modal.style.display = 'none'; };
+    if (btn) btn.addEventListener('click', () => { if (modal) modal.style.display = 'flex'; });
+    if (overlay) overlay.addEventListener('click', hide);
+    if (closeBtn) closeBtn.addEventListener('click', hide);
+    if (dismissBtn) dismissBtn.addEventListener('click', hide);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+}
+
+// ============================================
+// WEPPA BUTTON
+// ============================================
+
+function setupWeppa() {
+    const btn = document.getElementById('weppa-btn');
+    const overlay = document.getElementById('weppa-overlay');
+    const text = document.getElementById('weppa-text');
+    if (!btn || !overlay || !text) return;
+
+    btn.addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        text.style.opacity = '0';
+        text.style.fontSize = '3rem';
+
+        // Grow
+        requestAnimationFrame(() => {
+            text.style.fontSize = '8rem';
+            text.style.opacity = '1';
+        });
+
+        // Flash 3 times then fade
+        setTimeout(() => {
+            let count = 0;
+            const flash = () => {
+                text.style.opacity = '0';
+                setTimeout(() => {
+                    text.style.opacity = '1';
+                    count++;
+                    if (count < 3) {
+                        setTimeout(flash, 150);
+                    } else {
+                        // Fade out
+                        setTimeout(() => {
+                            text.style.opacity = '0';
+                            setTimeout(() => { overlay.style.display = 'none'; }, 600);
+                        }, 300);
+                    }
+                }, 150);
+            };
+            flash();
+        }, 600);
+    });
+}
+
+// ============================================
 // ============================================
 // INITIALIZATION
 // ============================================
@@ -1884,5 +1947,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupBirthdayPopup();
     setupCalendarModal();
     setupAddMemberModal();
+    setupKeverModal();
+    setupWeppa();
     loadFamilyTree();
 });

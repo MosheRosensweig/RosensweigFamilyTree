@@ -12,7 +12,7 @@ const CORS_PROXIES = [
     (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
 ];
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw1LMeR4x4cZbSG3LYVtNmvTJlaNYCOCrBnE684N32ML7i3huce4mGTMi5kpWWaAYA6/exec'; // Deploy the Apps Script (see google_apps_script.js) and paste the URL here
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2sVPLnQ0x_ildYtZGpkG5qQ95P-tBhb_vPKsl7LUfJchvKcoxGsLmKfpge5-1qDXq/exec';
 
 // ============================================
 // DATA STATE
@@ -1760,7 +1760,7 @@ function setupAddMemberModal() {
                 body: JSON.stringify(payload)
             }).then(() => {
                 setTimeout(() => {
-                    showStatus('✓ Saved to Spreadsheet!', 'success');
+                    showStatus('✓ Added ' + firstName + ' to the family!', 'success');
                     setTimeout(() => { closeModal(); }, 2000);
                 }, 1500);
             }).catch(err => {

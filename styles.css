@@ -924,6 +924,7 @@ footer a:hover {
     .button-group {
         width: 100%;
         justify-content: center;
+        flex-wrap: wrap;
     }
     
     .btn span:not(.btn-icon) {

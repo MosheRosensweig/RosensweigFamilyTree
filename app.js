@@ -1733,14 +1733,14 @@ function setupAddMemberModal() {
 
         renderTree(currentTreeData);
 
-        document.getElementById('result-csv-text').value = csvRow;
         form.style.display = 'none';
-        resultBox.style.display = 'flex';
 
         if (APPS_SCRIPT_URL) {
+            showStatus('Saving to Spreadsheet…', 'saving');
+            const placement = addType === 'spouse' ? targetNode.placement + '+' : targetNode.placement + '.' + ((targetNode.children ? targetNode.children.length : 0));
             const payload = {
-                placement: addType === 'spouse' ? targetNode.placement + '+' : targetNode.placement + '.' + ((targetNode.children ? targetNode.children.length : 0)),
-                lastName: addType === 'spouse' ? finalLastName : finalLastName,
+                placement: placement,
+                lastName: finalLastName,
                 maidenName: addType === 'spouse' ? lastName : '',
                 firstName: firstName,
                 middleName: middleName,
@@ -1759,10 +1759,19 @@ function setupAddMemberModal() {
                 headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify(payload)
             }).then(() => {
-                console.log('Saved to Google Spreadsheet via Apps Script.');
+                setTimeout(() => {
+                    showStatus('✓ Saved to Spreadsheet!', 'success');
+                    setTimeout(() => { closeModal(); }, 2000);
+                }, 1500);
             }).catch(err => {
                 console.error('Apps Script POST error:', err);
+                showStatus('⚠ Could not reach Spreadsheet. Copy the CSV row below and paste it manually.', 'error');
+                document.getElementById('result-csv-text').value = csvRow;
+                resultBox.style.display = 'flex';
             });
+        } else {
+            document.getElementById('result-csv-text').value = csvRow;
+            resultBox.style.display = 'flex';
         }
     });
 
